@@ -5,7 +5,7 @@ using System.Linq;
 namespace Day01
 {
     /// <summary>
-    /// Creates a captcha sequence from some input text
+    /// Creates captcha sequences from some input text
     /// </summary>
     public static class Program
     {
@@ -15,11 +15,20 @@ namespace Day01
 
             Console.WriteLine("The solution to the captcha is: " +
                               CreateCaptcha(input));
+
+            Console.WriteLine("The solution to the alternative captcha is: " +
+                              CreateAlternativeCaptcha(input));
         }
 
         public static int CreateCaptcha(string input)
         {
-            var pairs = GetDigitPairs(input);
+            var pairs = GetNeighbouringDigitPairs(input);
+            return CreateCaptcha(pairs);
+        }
+
+        public static int CreateAlternativeCaptcha(string input)
+        {
+            var pairs = GetHalfwayDigitPairs(input);
             return CreateCaptcha(pairs);
         }
 
@@ -36,12 +45,27 @@ namespace Day01
         /// <summary>
         /// Splits the input into a collection of neighbouring digit pairs
         /// </summary>
-        public static List<(char, char)> GetDigitPairs(string digits)
+        public static List<(char, char)> GetNeighbouringDigitPairs(string digits)
         {
             var pairs = new List<(char, char)>();
             for (var i = 0; i < digits.Length; i += 1)
             {
                 pairs.Add((digits[i], digits[(i + 1) % digits.Length]));
+            }
+
+            return pairs;
+        }
+
+        /// <summary>
+        /// Splits the input into a collection of pairs with each digit being paired
+        /// with another that is half the string length away
+        /// </summary>
+        public static List<(char, char)> GetHalfwayDigitPairs(string digits)
+        {
+            var pairs = new List<(char, char)>();
+            for (var i = 0; i < digits.Length; i += 1)
+            {
+                pairs.Add((digits[i], digits[(i + digits.Length/2) % digits.Length]));
             }
 
             return pairs;
