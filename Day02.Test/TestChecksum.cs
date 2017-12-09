@@ -10,6 +10,26 @@ namespace Day02.Test
     public class TestChecksum
     {
         [TestMethod]
+        public void CanCalculateFileDivisibleChecksum()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => CalculateDivisibleChecksum(null));
+            var data = Testing.GetTestFileContents("DivisibleTestInput.txt");
+            Assert.AreEqual(9, CalculateDivisibleChecksum(data));
+        }
+
+        [TestMethod]
+        public void CanFindDivisibleNumberSum()
+        {
+            var exception = Assert.ThrowsException<InvalidOperationException>(()
+                                => CalculateDivisibleSum(new List<int> { 5, 7, 3 }));
+            Assert.IsTrue(exception.Message.Contains("5, 7, 3"));
+
+            Assert.AreEqual(4, CalculateDivisibleSum(new List<int> { 5, 9, 2, 8 }));
+            Assert.AreEqual(3, CalculateDivisibleSum(new List<int> { 9, 4, 7, 3 }));
+            Assert.AreEqual(2, CalculateDivisibleSum(new List<int> { 3, 8, 6, 5 }));
+        }
+
+        [TestMethod]
         public void CanCalculateFileChecksum()
         {
             Assert.ThrowsException<ArgumentNullException>(() => CalculateChecksum(null));
