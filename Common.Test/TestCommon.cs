@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace Common.Test
 {
@@ -49,6 +50,39 @@ namespace Common.Test
             {
                 Assert.Fail($"Unable to load test file contents: {e.Message}");
             }
+        }
+
+        [TestMethod]
+        public void TestOrientation()
+        {
+            var orientation = new Orientation(Direction.Up);
+            Assert.AreEqual(orientation.Current, Direction.Up);
+
+            Assert.AreEqual(orientation.TurnLeft(), Direction.Left);
+            Assert.AreEqual(orientation.TurnLeft(), Direction.Down);
+            Assert.AreEqual(orientation.TurnLeft(), Direction.Right);
+            Assert.AreEqual(orientation.TurnLeft(), Direction.Up);
+
+            Assert.AreEqual(orientation.TurnRight(), Direction.Right);
+            Assert.AreEqual(orientation.TurnRight(), Direction.Down);
+            Assert.AreEqual(orientation.TurnRight(), Direction.Left);
+            Assert.AreEqual(orientation.TurnRight(), Direction.Up);
+        }
+
+        [TestMethod]
+        public void CorrectlyPrintsTwoDimensionalArray()
+        {
+            var outputText = "";
+            var output = new Mock<Print.IOutputWriter>();
+            output.Setup(s => s.Write(It.IsAny<string>())).Callback<string>(s => outputText += s);
+
+            var grid = new [,] {{0, 1}, {2, 3}};
+            Print.PrintGrid(grid, 2, output.Object);
+
+            var expectedOutput = " 1  3 " + Environment.NewLine + Environment.NewLine +
+                                 " 0  2 " + Environment.NewLine + Environment.NewLine;
+
+            Assert.AreEqual(expectedOutput , outputText);
         }
     }
 }
