@@ -41,6 +41,40 @@ namespace Day03.Test
 
         }
 
+        [TestMethod]
+        public void CanCreateStressTestMemoryMap()
+        {
+            var map = new SpiralMemory(1);
+            var actual = map.GenerateStressTestEntries(100);
+            var expected = new List<SpiralMemoryEntry> { new SpiralMemoryEntry(0, 0, 1) };
+
+            CheckMemoryEntriesEqual(expected, actual);
+
+            map = new SpiralMemory(4);
+            actual = map.GenerateStressTestEntries(100);
+            expected = new List<SpiralMemoryEntry> { new SpiralMemoryEntry(0, 0, 1),
+                                                     new SpiralMemoryEntry(1, 0, 1),
+                                                     new SpiralMemoryEntry(1, 1, 2),
+                                                     new SpiralMemoryEntry(0, 1, 4) };
+
+            CheckMemoryEntriesEqual(expected, actual);
+
+            map = new SpiralMemory(9);
+            actual = map.GenerateStressTestEntries(100);
+            expected = new List<SpiralMemoryEntry> { new SpiralMemoryEntry(1, 1, 1),
+                                                     new SpiralMemoryEntry(2, 1, 1),
+                                                     new SpiralMemoryEntry(2, 2, 2),
+                                                     new SpiralMemoryEntry(1, 2, 4),
+                                                     new SpiralMemoryEntry(0, 2, 5),
+                                                     new SpiralMemoryEntry(0, 1, 10),
+                                                     new SpiralMemoryEntry(0, 0, 11),
+                                                     new SpiralMemoryEntry(1, 0, 23),
+                                                     new SpiralMemoryEntry(2, 0, 25) };
+
+            CheckMemoryEntriesEqual(expected, actual);
+
+        }
+
         private static void CheckMemoryEntriesEqual(IEnumerable<SpiralMemoryEntry> expected,
                                                     IEnumerable<SpiralMemoryEntry> actual)
         {

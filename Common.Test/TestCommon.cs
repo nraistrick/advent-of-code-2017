@@ -84,5 +84,25 @@ namespace Common.Test
 
             Assert.AreEqual(expectedOutput , outputText);
         }
+
+        [TestMethod]
+        public void TestSafeArrayElementAccess()
+        {
+            var array = new [,] {{1, 2}, {3, 4}};
+
+            var retrieved = array.TryGetElement(0, 0, out var element);
+            Assert.AreEqual(true, retrieved);
+            Assert.AreEqual(element, 1);
+
+            retrieved = array.TryGetElement(1, 1, out element);
+            Assert.AreEqual(true, retrieved);
+            Assert.AreEqual(element, 4);
+
+            retrieved = array.TryGetElement(2, 1, out element);
+            Assert.AreEqual(false, retrieved);
+
+            retrieved = array.TryGetElement(-1, 0, out element);
+            Assert.AreEqual(false, retrieved);
+        }
     }
 }

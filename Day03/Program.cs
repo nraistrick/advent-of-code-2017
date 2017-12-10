@@ -7,10 +7,17 @@ namespace Day03
     {
         private static void Main()
         {
-            var memoryMapper = new SpiralMemory(347991);
+            const int puzzleInput = 347991;
+
+            var memoryMapper = new SpiralMemory(puzzleInput);
             var entry = memoryMapper.GenerateEntries().Last();
             Console.WriteLine($"End coordinates are: {entry.X}, {entry.Y}");
             Console.WriteLine($"Distance from origin is: {memoryMapper.DistanceFromOrigin()}");
+
+            memoryMapper = new SpiralMemory(1000);
+            var stressEntry = memoryMapper.GenerateStressTestEntries(puzzleInput).Last();
+            Console.WriteLine("First value written that is larger than the input is: " +
+                              stressEntry.Value);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Day03
             Value = value;
         }
     }
-    
+
     /// <summary>
     /// Represents an experimental spiral memory structure
     /// </summary>
@@ -36,7 +36,7 @@ namespace Day03
         {
             int width, height;
             width = height = (int)Math.Ceiling(Math.Sqrt(entries));
-            
+
             _map = new int[width, height];
             _entries = entries;
 
@@ -47,10 +47,10 @@ namespace Day03
 
             _orientation = new Orientation(Direction.Right);
         }
-        
+
         /// <summary>
         /// Beginning in the centre of the structure, uterates through the memory
-        /// structure and populates it with values
+        /// structure and populates it with sequential values
         /// </summary>
         public IEnumerable<SpiralMemoryEntry> GenerateEntries()
         {
@@ -61,9 +61,29 @@ namespace Day03
                 yield return new SpiralMemoryEntry(_x, _y, value);
 
                 if (value >= _entries) { break; }
-                
+
                 MoveToNextEntry();
                 value++;
+            }
+        }
+
+        /// <summary>
+        /// Beginning in the centre of the structure, uterates through the memory
+        /// structure and populates it with sequential values
+        /// </summary>
+        public IEnumerable<SpiralMemoryEntry> GenerateStressTestEntries(int maximum)
+        {
+            while (true)
+            {
+                var value = CalculateStressTestValue();
+                if (value == 0) { value = 1; }
+
+                _map[_x, _y] = value;
+                yield return new SpiralMemoryEntry(_x, _y, value);
+
+                if (value > maximum) { break; }
+
+                MoveToNextEntry();
             }
         }
 
@@ -93,6 +113,25 @@ namespace Day03
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private int CalculateStressTestValue()
+        {
+            var value = 0;
+
+            for (var i = _x - 1; i <= _x + 1; i++)
+            {
+                for (var j = _y - 1; j <= _y + 1; j++)
+                {
+                    if (i == _x && j == _y)
+                        continue;
+
+                    if (_map.TryGetElement(i, j, out var elementValue))
+                        value += elementValue;
+                }
+            }
+
+            return value;
         }
 
         /// <summary>
