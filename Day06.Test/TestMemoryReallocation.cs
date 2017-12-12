@@ -28,7 +28,9 @@ namespace Day06.Test
         [TestMethod]
         public void TestFindRepeatConfiguration()
         {
-            Assert.AreEqual(5, Program.FindStepsToRepeatConfiguration(new List<int> {0, 2, 7, 0}));
+            var allocations = new List<int> {0, 2, 7, 0};
+            Assert.AreEqual(5, Program.FindStepsToRepeatConfiguration(allocations));
+            Assert.AreEqual(4, Program.FindStepsToRepeatConfiguration(allocations));
         }
     }
 }

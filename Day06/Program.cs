@@ -16,6 +16,9 @@ namespace Day06
             var steps = FindStepsToRepeatConfiguration(allocations);
 
             Console.WriteLine($"Number of steps before we find a repeat configuration is: {steps}");
+
+            var infiniteLoopSteps = FindStepsToRepeatConfiguration(allocations);
+            Console.WriteLine($"Number of steps to find the repeat configuration again is: {infiniteLoopSteps}");
         }
 
         private static List<int> GetMemoryAllocations(string inputFile)
