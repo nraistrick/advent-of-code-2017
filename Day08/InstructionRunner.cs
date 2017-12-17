@@ -13,12 +13,14 @@ namespace Day08
         private const string Pattern = @"([a-z]+) (inc|dec) ((?:-)?\d+) if ([a-z]+) (==|<=|>=|<|>|!=) ((?:-)?\d+)";
 
         public readonly Dictionary<string, int> Registers;
+        public int MaxValueHeld;
         private readonly string[] _instructions;
 
         public InstructionRunner(string[] instructions)
         {
             _instructions = instructions;
             Registers = new Dictionary<string, int>();
+            MaxValueHeld = 0;
         }
 
         public void RunInstructions()
@@ -45,6 +47,11 @@ namespace Day08
                         break;
                     default:
                         throw new InvalidOperationException($"Command not implemented {command}");
+                }
+
+                if (Registers[firstRegister] > MaxValueHeld)
+                {
+                    MaxValueHeld = Registers[firstRegister];
                 }
             }
         }

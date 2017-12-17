@@ -17,6 +17,8 @@ namespace Day08.Test
             CollectionAssert.AreEquivalent(
                 new Dictionary<string, int> {{"a", 1}, {"b", 0}, {"c", -10}},
                 instructionRunner.Registers);
+
+            Assert.AreEqual(10, instructionRunner.MaxValueHeld);
         }
     }
 }

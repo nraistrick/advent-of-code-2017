@@ -15,6 +15,8 @@ namespace Day08
             Console.WriteLine("The final register values are:");
             var lines = instructionRunner.Registers.Select(kvp => kvp.Key + ": " + kvp.Value.ToString());
             Console.WriteLine(string.Join(Environment.NewLine, lines));
+
+            Console.WriteLine($"The maximum value held was: {instructionRunner.MaxValueHeld}");
         }
     }
 }
