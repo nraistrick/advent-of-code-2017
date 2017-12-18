@@ -22,12 +22,14 @@ namespace Day11
         private static void Main()
         {
             var inputData = File.ReadAllText("Input.txt").Split(",");
-            var steps = CalculateStepsFromOrigin(inputData);
+            var (steps, maxSteps) = CalculateStepsFromOrigin(inputData);
             Console.WriteLine($"The steps from origin are: {steps}");
+            Console.WriteLine($"The max steps from origin are: {maxSteps}");
         }
 
-        public static int CalculateStepsFromOrigin(IEnumerable<string> instructions)
+        public static (int endSteps, int maxSteps) CalculateStepsFromOrigin(IEnumerable<string> instructions)
         {
+            var (steps, maxSteps) = (0, 0);
             var (north, south, east, west) = (0, 0, 0, 0);
 
             foreach (var i in instructions)
@@ -55,9 +57,13 @@ namespace Day11
                     default:
                         throw new InvalidOperationException($"Did not recognise direction {i}");
                 }
+
+                steps = (Math.Abs(north - south) + Math.Abs(east - west)) / 2;
+
+                if (steps > maxSteps) { maxSteps = steps; }
             }
 
-            return (Math.Abs(north - south) + Math.Abs(east - west)) / 2;
+            return (steps, maxSteps);
         }
     }
 }
