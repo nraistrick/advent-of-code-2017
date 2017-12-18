@@ -26,5 +26,13 @@ namespace Day12.Test
             CollectionAssert.AreEquivalent(new List<int> {0, 2, 3, 4, 5, 6},
                                            Program.ProgramsInGroup(0, connectedPrograms));
         }
+
+        [TestMethod]
+        public void TestCountGroups()
+        {
+            var pipeData = Testing.GetTestFileContents("TestInput.txt").Split(Environment.NewLine);
+            var connectedPrograms = Program.GetConnectedPrograms(pipeData);
+            Assert.AreEqual(2, Program.CountGroups(connectedPrograms));
+        }
     }
 }
