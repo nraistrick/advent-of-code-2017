@@ -17,5 +17,17 @@ namespace Day09.Test
             Assert.AreEqual(9,  Program.CountGroupScore("{{<!!>},{<!!>},{<!!>},{<!!>}}"));
             Assert.AreEqual(3,  Program.CountGroupScore("{{<a!>},{<a!>},{<a!>},{<ab>}}"));
         }
+
+        [TestMethod]
+        public void TestCountGarbageCharacters()
+        {
+            Assert.AreEqual(0,  Program.CountRubbishCharacters("<>"));
+            Assert.AreEqual(17, Program.CountRubbishCharacters("<random characters>"));
+            Assert.AreEqual(3,  Program.CountRubbishCharacters("<<<<>"));
+            Assert.AreEqual(2,  Program.CountRubbishCharacters("<{!>}>"));
+            Assert.AreEqual(0,  Program.CountRubbishCharacters("<!!>"));
+            Assert.AreEqual(0,  Program.CountRubbishCharacters("<!!!>>"));
+            Assert.AreEqual(10, Program.CountRubbishCharacters("<{o\"i!a,<{i<a>"));
+        }
     }
 }
