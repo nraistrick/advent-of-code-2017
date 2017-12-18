@@ -104,5 +104,47 @@ namespace Common.Test
             retrieved = array.TryGetElement(-1, 0, out element);
             Assert.AreEqual(false, retrieved);
         }
+
+        [TestMethod]
+        public void TestRotateLeft()
+        {
+            var items = new List<int> {1, 2, 3};
+
+            items = items.RotateLeft();
+            CollectionAssert.AreEqual(new List<int> {2, 3, 1}, items);
+
+            items = items.RotateLeft();
+            CollectionAssert.AreEqual(new List<int> {3, 1, 2}, items);
+
+            items = items.RotateLeft();
+            CollectionAssert.AreEqual(new List<int> {1, 2, 3}, items);
+
+            items = items.RotateLeft(2);
+            CollectionAssert.AreEqual(new List<int> {3, 1, 2}, items);
+
+            items = items.RotateLeft(5);
+            CollectionAssert.AreEqual(new List<int> {2, 3, 1}, items);
+        }
+
+        [TestMethod]
+        public void TestRotateRight()
+        {
+            var items = new List<int> {1, 2, 3};
+
+            items = items.RotateRight();
+            CollectionAssert.AreEqual(new List<int> {3, 1, 2}, items);
+
+            items = items.RotateRight();
+            CollectionAssert.AreEqual(new List<int> {2, 3, 1}, items);
+
+            items = items.RotateRight();
+            CollectionAssert.AreEqual(new List<int> {1, 2, 3}, items);
+
+            items = items.RotateRight(2);
+            CollectionAssert.AreEqual(new List<int> {2, 3, 1}, items);
+
+            items = items.RotateRight(5);
+            CollectionAssert.AreEqual(new List<int> {3, 1, 2}, items);
+        }
     }
 }
