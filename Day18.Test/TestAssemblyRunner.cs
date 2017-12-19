@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,10 +12,13 @@ namespace Day18.Test
         public void TestExecuteInstructions()
         {
             var instructions = Testing.GetTestFileContents("TestInput.txt").Split(Environment.NewLine);
-            var runner = new AssemblyRunner(instructions);
+            var (programOneOutput, programTwoOutput) = (new Queue<long>(), new Queue<long>());
 
-            runner.ExecuteInstructions();
-            Assert.AreEqual(4, runner.LastSoundPlayed);
+            var firstRunner  = new AssemblyRunner(instructions, programTwoOutput, programOneOutput, 0);
+            var secondRunner = new AssemblyRunner(instructions, programOneOutput, programTwoOutput, 1);
+
+            Program.RunTwoRunnersInParallel(firstRunner, secondRunner);
+            Assert.AreEqual(3, firstRunner.ValuesSent);
         }
     }
 }

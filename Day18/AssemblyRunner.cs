@@ -9,15 +9,23 @@ namespace Day18
     /// </summary>
     public class AssemblyRunner
     {
-        public long LastSoundPlayed;
+        public int CurrentLine;
+        public int ValuesSent;
+        public bool Waiting;
 
         private readonly IList<string> _instructions;
         private readonly Dictionary<string, long> _registers;
+        private readonly Queue<long> _input, _output;
 
-        public AssemblyRunner(IList<string> instructions)
+        public AssemblyRunner(IList<string> instructions, Queue<long> input, Queue<long> output, int id)
         {
             _instructions = instructions;
-            _registers = new Dictionary<string, long>();
+            _registers = new Dictionary<string, long> {{"p", id}};
+
+            (_input, _output) = (input, output);
+
+            CurrentLine = 0;
+            ValuesSent = 0;
         }
 
         /// <summary>
@@ -60,39 +68,47 @@ namespace Day18
             _registers[register] = Translate(value);
         }
 
-        public void ExecuteInstructions()
+        public void ExecuteNext()
         {
-            for (var i = 0; i < _instructions.Count; i++)
+            if (CurrentLine >= _instructions.Count)
             {
-                var split = _instructions[i].Split(" ");
-
-                switch (split[0])
-                {
-                    case "add":
-                        Add(split[1], split[2]);
-                        break;
-                    case "mul":
-                        Multiply(split[1], split[2]);
-                        break;
-                    case "mod":
-                        Modulus(split[1], split[2]);
-                        break;
-                    case "set":
-                        Set(split[1], split[2]);
-                        break;
-                    case "jgz":
-                        if (Translate(split[1]) > 0) { i += (int)Translate(split[2]); i--; }
-                        break;
-                    case "snd":
-                        LastSoundPlayed = Translate(split[1]);
-                        break;
-                    case "rcv":
-                        if (Translate(split[1]) != 0) { return; }
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Did not recognise instruction: {split[0]}");
-                }
+                CurrentLine = -1;
+                return;
             }
+
+            var split = _instructions[CurrentLine].Split(" ");
+
+            switch (split[0])
+            {
+                case "add":
+                    Add(split[1], split[2]);
+                    break;
+                case "mul":
+                    Multiply(split[1], split[2]);
+                    break;
+                case "mod":
+                    Modulus(split[1], split[2]);
+                    break;
+                case "set":
+                    Set(split[1], split[2]);
+                    break;
+                case "jgz":
+                    if (Translate(split[1]) > 0) { CurrentLine += (int)Translate(split[2]); CurrentLine--; }
+                    break;
+                case "snd":
+                    _output.Enqueue(Translate(split[1]));
+                    ValuesSent++;
+                    break;
+                case "rcv":
+                    if (_input.Count == 0) { CurrentLine--; Waiting = true; break; }
+                    Waiting = false;
+                    _registers[split[1]] = _input.Dequeue();
+                    break;
+                default:
+                    throw new InvalidOperationException($"Did not recognise instruction: {split[0]}");
+            }
+
+            CurrentLine++;
         }
     }
 }
