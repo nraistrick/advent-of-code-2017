@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Day14
 {
@@ -14,6 +15,61 @@ namespace Day14
             var grid = CreateDefragmentationGrid("hwlqcszp", 128);
             var usedSquares = GetUsedSquares(grid);
             Console.WriteLine($"The number of used squares is: {usedSquares}");
+
+            var regions = CountRegions(grid);
+            Console.WriteLine($"The number of regions is: {regions}");
+        }
+
+        /// <summary>
+        /// Counts the number of regions; a region is a number of adjacent binary 1's.
+        /// Note this doesn't include diagonals.
+        /// </summary>
+        public static int CountRegions(List<string> grid)
+        {
+            var regions = 0;
+
+            for (var y = 0; y < grid.Count; y++)
+            {
+                var x = grid[y].IndexOf('1');
+                while (x != -1)
+                {
+                    RemoveConnectedSquares(x, y, grid);
+                    x = grid[y].IndexOf('1');
+                    regions++;
+                }
+            }
+
+            return regions;
+        }
+
+        /// <summary>
+        /// Recursively removes all squares connected to the current; these are
+        /// the ones that make up a region
+        /// </summary>
+        private static void RemoveConnectedSquares(int x, int y, IList<string> grid)
+        {
+            var removedSquare = new StringBuilder(grid[y]) {[x] = '0'};
+            grid[y] = removedSquare.ToString();
+
+            if (x > 0 && grid[y][x - 1] == '1')
+            {
+                RemoveConnectedSquares(x - 1, y, grid);
+            }
+
+            if (x < grid[y].Length - 1 && grid[y][x + 1] == '1')
+            {
+                RemoveConnectedSquares(x + 1, y, grid);
+            }
+
+            if (y > 0 && grid[y - 1][x] == '1')
+            {
+                RemoveConnectedSquares(x, y - 1, grid);
+            }
+
+            if (y < grid.Count - 1 && grid[y + 1][x] == '1')
+            {
+                RemoveConnectedSquares(x, y + 1, grid);
+            }
         }
 
         public static int GetUsedSquares(IEnumerable<string> grid)
@@ -21,7 +77,7 @@ namespace Day14
             return grid.Sum(CountNumberOfOnes);
         }
 
-        public static IEnumerable<string> CreateDefragmentationGrid(string key, int rows)
+        public static List<string> CreateDefragmentationGrid(string key, int rows)
         {
             return Enumerable.Range(0, rows).Select(row => GetKnotHashBinary($"{key}-{row}")).ToList();
         }

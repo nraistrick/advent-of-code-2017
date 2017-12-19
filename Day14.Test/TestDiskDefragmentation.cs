@@ -23,5 +23,12 @@ namespace Day14.Test
             var grid = Program.CreateDefragmentationGrid("flqrgnkx", 2);
             Assert.AreEqual(146, Program.GetUsedSquares(grid));
         }
+
+        [TestMethod]
+        public void TestCountRegions()
+        {
+            var grid = Program.CreateDefragmentationGrid("flqrgnkx", 2);
+            Assert.AreEqual(34, Program.CountRegions(grid));
+        }
     }
 }
