@@ -61,6 +61,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day14", "Day14\Day14.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day14.Test", "Day14.Test\Day14.Test.csproj", "{AEF07411-E4F1-426B-9884-40B64F07F3F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day15", "Day15\Day15.csproj", "{332E9093-5225-4215-A796-C855AD7963EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day15.Test", "Day15.Test\Day15.Test.csproj", "{0CA4561B-FA60-4A2A-B38E-E807A0C9E418}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,5 +130,9 @@ Global
 		{1B4027B0-9F94-42B8-9B3C-93CFA648C056}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEF07411-E4F1-426B-9884-40B64F07F3F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AEF07411-E4F1-426B-9884-40B64F07F3F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{332E9093-5225-4215-A796-C855AD7963EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{332E9093-5225-4215-A796-C855AD7963EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA4561B-FA60-4A2A-B38E-E807A0C9E418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA4561B-FA60-4A2A-B38E-E807A0C9E418}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal
