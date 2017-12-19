@@ -21,6 +21,22 @@ namespace Day16
             ExecuteInstructions(instructions);
 
             Console.WriteLine($"The programs are now standing in order: {string.Join("", Programs)}");
+
+            // Look for repetitions in the final dance order for
+            // a number of repeated dances
+            var previousIterations = new HashSet<string> { string.Join("", Programs) };
+            for (var i = 2; i < 120; i++)
+            {
+                ExecuteInstructions(instructions);
+                var current = string.Join("", Programs);
+                if (previousIterations.Contains(current))
+                {
+                    Console.WriteLine($"Repeat order on iteration {i}: {string.Join("", Programs)}");
+                    continue;
+                }
+
+                previousIterations.Add(current);
+            }
         }
 
         public static void Spin(int number)
