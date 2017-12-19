@@ -14,6 +14,11 @@ namespace Day15
             var generatorB = new Generator(190, 48271);
             var partialMatchCount = CountPartialMatches(40000000, generatorA, generatorB);
             Console.WriteLine($"The number of partial matches is: {partialMatchCount}");
+
+            generatorA = new Generator(516, 16807, 4);
+            generatorB = new Generator(190, 48271, 8);
+            partialMatchCount = CountPartialMatches(5000000, generatorA, generatorB);
+            Console.WriteLine($"The number of divisible partial matches is: {partialMatchCount}");
         }
 
         public static int CountPartialMatches(int range, Generator generatorA, Generator generatorB)
