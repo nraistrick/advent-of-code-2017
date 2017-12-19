@@ -13,6 +13,9 @@ namespace Day17
             var circularBuffer = new List<int> {0};
             var finalIndex = RunSpinlock(circularBuffer, 2017, 303);
             Console.WriteLine($"The value generated after 2017 is: {circularBuffer[finalIndex + 1]}");
+
+            var valueAfterZero = GetSpinlockValueAfterZero(50000000, 303);
+            Console.WriteLine($"The value inserted after zero is: {valueAfterZero}");
         }
 
         /// <summary>
@@ -34,10 +37,36 @@ namespace Day17
                 }
 
                 circularBuffer.Insert(index + 1, i);
+
                 index++;
             }
 
             return index;
+        }
+
+        /// <summary>
+        /// Gets the value that appears after zero for a given number of spinlock iterations
+        /// </summary>
+        /// <param name="iterations"></param>
+        /// <param name="steps"></param>
+        /// <returns></returns>
+        public static int GetSpinlockValueAfterZero(int iterations, int steps)
+        {
+            var index = 0;
+            var valueAfterZero = 0;
+
+            for (var i = 1; i <= iterations; i++)
+            {
+                index = (index + steps) % Math.Max(i, 1);
+                if (index == 0)
+                {
+                    valueAfterZero = i;
+                }
+
+                index++;
+            }
+
+            return valueAfterZero;
         }
     }
 }

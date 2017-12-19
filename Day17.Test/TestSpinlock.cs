@@ -21,5 +21,11 @@ namespace Day17.Test
             var finalIndex = Program.RunSpinlock(circularBuffer, 2017, 3);
             Assert.AreEqual(638, circularBuffer[finalIndex + 1]);
         }
+
+        [TestMethod]
+        public void TestGetSpinlockValueAfterZero()
+        {
+            Assert.AreEqual(9, Program.GetSpinlockValueAfterZero(9, 3));
+        }
     }
 }
