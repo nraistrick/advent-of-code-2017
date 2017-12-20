@@ -17,6 +17,10 @@ namespace Day20
             var particles = LoadParticles(inputData);
             var closestToOrigin = ParticleWhichStaysClosestToTheOrigin(particles);
             Console.WriteLine($"The particle which stays nearest the origin is: {closestToOrigin}");
+
+            particles = LoadParticles(inputData);
+            var particlesAfterCollisons = ParticlesLeftAfterCollisions(particles);
+            Console.WriteLine($"The number of particles left after collisions is {particlesAfterCollisons}");
         }
 
         /// <summary>
@@ -39,6 +43,60 @@ namespace Day20
                                            ToTuple(m.Groups["velocity"]),
                                            ToTuple(m.Groups["acceleration"])));
             }
+
+            return particles;
+        }
+
+        /// <summary>
+        /// Calculates the number of particles left after the ones that collide
+        /// are cancelled out
+        /// </summary>
+        public static int ParticlesLeftAfterCollisions(IList<Particle> particles)
+        {
+            const int moves = 5000;
+
+            for (var i = 0; i < moves; i++)
+            {
+                particles = RemoveCollidedParticles(particles);
+                foreach (var particle in particles) { particle.Move(); }
+            }
+
+            return particles.Count;
+        }
+
+        /// <summary>
+        /// Removes all particles that have the same position
+        /// </summary>
+        private static IList<Particle> RemoveCollidedParticles(IList<Particle> particles)
+        {
+            // Groups particles by their position
+            var positions = new Dictionary<(int, int, int), List<int>>();
+            for (var i = 0; i < particles.Count; i++)
+            {
+                var particle = particles[i];
+                if (positions.ContainsKey(particle.Position))
+                {
+                    positions[particle.Position].Add(i);
+                    continue;
+                }
+
+                positions.Add(particle.Position, new List<int> { i });
+            }
+
+            // Group all particles which share a position
+            var collisions = new List<int>();
+            foreach (var item in positions)
+            {
+                if (item.Value.Count > 1)
+                {
+                    collisions.AddRange(item.Value);
+                }
+            }
+
+            // Remove collided particles
+            collisions.Sort();
+            collisions.Reverse();
+            foreach (var i in collisions) { particles.RemoveAt(i); }
 
             return particles;
         }

@@ -78,5 +78,14 @@ namespace Day20.Test
             var particles = Program.LoadParticles(inputData);
             Assert.AreEqual(0, Program.ParticleWhichStaysClosestToTheOrigin(particles));
         }
+
+        [TestMethod]
+        public void TestParticleCountAfterCollisions()
+        {
+            var inputData = Testing.GetTestFileContents("TestInputPartTwo.txt").Split(Environment.NewLine);
+            var particles = Program.LoadParticles(inputData);
+            var particleCountAfterCollisions = Program.ParticlesLeftAfterCollisions(particles);
+            Assert.AreEqual(1, particleCountAfterCollisions);
+        }
     }
 }
