@@ -56,7 +56,15 @@ namespace Day13.Test
         {
             var inputData = Testing.GetTestFileContents("TestInput.txt").Split(Environment.NewLine);
             var layers = Program.CreateLayers(inputData);
-            Assert.AreEqual(24, Program.CalculateSeverity(layers));
+            Assert.AreEqual(24, Program.CalculateSeverity(layers, out var caught));
+        }
+
+        [TestMethod]
+        public void TestFindDelayToAvoidBeingCaught()
+        {
+             var inputData = Testing.GetTestFileContents("TestInput.txt").Split(Environment.NewLine);
+             var layers = Program.CreateLayers(inputData);
+             Assert.AreEqual(10, Program.CalculateDelayToAvoidBeingCaught(inputData));
         }
     }
 }
