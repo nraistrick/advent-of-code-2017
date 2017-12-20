@@ -7,7 +7,7 @@ namespace Day19
 {
     /// <summary>
     /// Collects information the letters passed while following the one
-    /// allowable route on a map
+    /// allowable route on a _map
     ///
     ///  +--->
     ///  |   x
@@ -29,7 +29,7 @@ namespace Day19
         }
 
         /// <summary>
-        /// Pads all rows in a map with spaces so they have equivalent width
+        /// Pads all rows in a _map with spaces so they have equivalent width
         /// </summary>
         private static string[] NormaliseMapWidth(string[] map)
         {
@@ -44,18 +44,20 @@ namespace Day19
         }
 
         /// <summary>
-        /// Retrieves the letters encountered while following the provided map
+        /// Retrieves the letters encountered while following the provided _map
         /// </summary>
-        public List<string> FindLettersOnPath()
+        public (List<string> letters, int steps) FindLettersOnPath()
         {
             var letters = new List<string>();
+            var steps = 0;
 
-            // Get the starting information
             var direction = Direction.Down;
             var (x, y) = (_map[0].IndexOf(Vertical), 0);
 
             while (_map[y][x] != EndOfMap)
             {
+                steps++;
+
                 if (char.IsLetter(_map[y][x]))
                 {
                     letters.Add(char.ToString(_map[y][x]));
@@ -72,7 +74,7 @@ namespace Day19
                 (x, y) = NextCoordinates(x, y, direction);
             }
 
-            return letters;
+            return (letters, steps);
         }
 
         private bool PathOnLeft (int x, int y) => x > 0                  && (_map[y][x - 1] == Horizontal || char.IsLetter(_map[y][x - 1]));

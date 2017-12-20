@@ -15,8 +15,9 @@ namespace Day19.Test
             var map = Testing.GetTestFileContents("TestInput.txt").Split(Environment.NewLine);
             var mapFollower = new PathFollower(map);
 
-            var letters = mapFollower.FindLettersOnPath();
+            var (letters, steps) = mapFollower.FindLettersOnPath();
             Assert.AreEqual("ABCDEF", string.Join("", letters));
+            Assert.AreEqual(38, steps);
         }
     }
 }
