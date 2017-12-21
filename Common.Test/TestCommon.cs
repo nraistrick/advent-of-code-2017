@@ -146,5 +146,90 @@ namespace Common.Test
             items = items.RotateRight(5);
             CollectionAssert.AreEqual(new List<int> {3, 1, 2}, items);
         }
+
+        [TestMethod]
+        public void TestInsertCharacter()
+        {
+            Assert.AreEqual("##./#../...", Utilities.InsertCharacterAtIntervals("##.#.....", '/', 3));
+        }
+
+        [TestMethod]
+        public void TestGetArraySubsection()
+        {
+            char[,] testArray =
+            {
+                {'.', '#', '.'},
+                {'.', '.', '#'},
+                {'#', '#', '#'}
+            };
+
+            var subsection = new [,]
+            {
+                {'.', '#',},
+                {'.', '.',}
+            };
+            CollectionAssert.AreEqual(subsection, Utilities.GetArraySubsection(testArray, 2, 0, 0));
+
+            subsection = new [,]
+            {
+                {'#', '.',},
+                {'.', '#',}
+            };
+            CollectionAssert.AreEqual(subsection, Utilities.GetArraySubsection(testArray, 2, 1, 0));
+
+            subsection = new [,]
+            {
+                {'.', '.',},
+                {'#', '#',}
+            };
+            CollectionAssert.AreEqual(subsection, Utilities.GetArraySubsection(testArray, 2, 0, 1));
+
+            subsection = new [,]
+            {
+                {'.', '#',},
+                {'#', '#',}
+            };
+            CollectionAssert.AreEqual(subsection, Utilities.GetArraySubsection(testArray, 2, 1, 1));
+        }
+
+        [TestMethod]
+        public void TestInsertArraySubsection()
+        {
+            var subsection = new [,]
+            {
+                {'.', '#',},
+                {'.', '.',}
+            };
+
+            var expected = new[,]
+            {
+                {'.',   '#', '\0', '\0'},
+                {'.',   '.', '\0', '\0'},
+                {'\0', '\0', '\0', '\0'},
+                {'\0', '\0', '\0', '\0'}
+            };
+            var newArray = new char[4, 4];
+            CollectionAssert.AreEqual(expected, Utilities.InsertArraySubsection(subsection, newArray, 0, 0));
+
+            expected = new[,]
+            {
+                {'\0', '\0',  '.',  '#'},
+                {'\0', '\0',  '.',  '.'},
+                {'\0', '\0', '\0', '\0'},
+                {'\0', '\0', '\0', '\0'}
+            };
+            newArray = new char[4, 4];
+            CollectionAssert.AreEqual(expected, Utilities.InsertArraySubsection(subsection, newArray, 2, 0));
+
+            expected = new[,]
+            {
+                {'\0', '\0', '\0', '\0'},
+                {'\0', '\0', '\0', '\0'},
+                {'\0', '\0',  '.',  '#'},
+                {'\0', '\0',  '.',  '.'}
+            };
+            newArray = new char[4, 4];
+            CollectionAssert.AreEqual(expected, Utilities.InsertArraySubsection(subsection, newArray, 2, 2));
+        }
     }
 }
