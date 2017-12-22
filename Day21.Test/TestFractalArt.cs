@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -107,28 +108,25 @@ namespace Day21.Test
             var loadedRules = Program.LoadRules(ruleSet);
 
             // No rotation required
-            Assert.AreEqual("##./#../...", Program.FindMatchingRule("../.#", loadedRules));
-            Assert.AreEqual("#..#/..../..../#..#", Program.FindMatchingRule(".#./..#/###", loadedRules));
+            Assert.AreEqual("##./#../...",         loadedRules["../.#"]);
+            Assert.AreEqual("#..#/..../..../#..#", loadedRules[".#./..#/###"]);
 
             // Rotation required
-            Assert.AreEqual("##./#../...", Program.FindMatchingRule("../#.", loadedRules));
-            Assert.AreEqual("##./#../...", Program.FindMatchingRule("#./..", loadedRules));
-            Assert.AreEqual("##./#../...", Program.FindMatchingRule(".#/..", loadedRules));
-            Assert.AreEqual("#..#/..../..../#..#", Program.FindMatchingRule("#../#.#/##.", loadedRules));
-            Assert.AreEqual("#..#/..../..../#..#", Program.FindMatchingRule("###/#../.#.", loadedRules));
-            Assert.AreEqual("#..#/..../..../#..#", Program.FindMatchingRule(".##/#.#/..#", loadedRules));
+            Assert.AreEqual("##./#../...",         loadedRules["../#."]);
+            Assert.AreEqual("##./#../...",         loadedRules["#./.."]);
+            Assert.AreEqual("##./#../...",         loadedRules[".#/.."]);
+            Assert.AreEqual("#..#/..../..../#..#", loadedRules["#../#.#/##."]);
+            Assert.AreEqual("#..#/..../..../#..#", loadedRules["###/#../.#."]);
+            Assert.AreEqual("#..#/..../..../#..#", loadedRules[".##/#.#/..#"]);
 
             // Flip required
-            Assert.AreEqual("#..#/..../..../#..#", Program.FindMatchingRule(".#./#../###", loadedRules));
-            Assert.AreEqual("#..#/..../..../#..#", Program.FindMatchingRule("###/..#/.#.", loadedRules));
+            Assert.AreEqual("#..#/..../..../#..#", loadedRules[".#./#../###"]);
+            Assert.AreEqual("#..#/..../..../#..#", loadedRules["###/..#/.#."]);
 
             // Should not match
-            Assert.ThrowsException<InvalidOperationException>(
-                () => Program.FindMatchingRule("###/#../#..", loadedRules));
-            Assert.ThrowsException<InvalidOperationException>(
-                () => Program.FindMatchingRule("###/#../#.#", loadedRules));
-            Assert.ThrowsException<InvalidOperationException>(
-                () => Program.FindMatchingRule("###/.../...", loadedRules));
+            Assert.ThrowsException<KeyNotFoundException>(() => loadedRules["###/#../#.."]);
+            Assert.ThrowsException<KeyNotFoundException>(() => loadedRules["###/#../#.#"]);
+            Assert.ThrowsException<KeyNotFoundException>(() => loadedRules["###/.../..."]);
         }
 
         [TestMethod]
@@ -136,9 +134,20 @@ namespace Day21.Test
         {
             var ruleSet = Testing.GetTestFileContents("TestInput.txt").Split(Environment.NewLine);
             var loadedRules = Program.LoadRules(ruleSet);
-            Assert.AreEqual("##./#../...", Program.ExpandArt("../.#", loadedRules));
-            Assert.AreEqual("#..#/..../..../#..#", Program.ExpandArt(".#./..#/###/", loadedRules));
-            Assert.AreEqual("##.##./#..#../....../##.##./#..#../......", Program.ExpandArt("..../.#.#/..../.#.#", loadedRules));
+            CollectionAssert.AreEqual(Program.Delinearize("##./#../..."),
+                Program.ExpandArt(new [,] {{'.', '.'},
+                                           {'.', '#'}}, loadedRules));
+
+            CollectionAssert.AreEqual(Program.Delinearize("#..#/..../..../#..#"),
+                Program.ExpandArt(new [,] {{'.', '#', '.'},
+                                           {'.', '.', '#'},
+                                           {'#', '#', '#'}}, loadedRules));
+
+            CollectionAssert.AreEqual(Program.Delinearize("##.##./#..#../....../##.##./#..#../......"),
+                Program.ExpandArt(new [,] {{'.', '.', '.', '.'},
+                                           {'.', '#', '.', '#'},
+                                           {'.', '.', '.', '.'},
+                                           {'.', '#', '.', '#'}}, loadedRules));
         }
 
         [TestMethod]
@@ -146,10 +155,8 @@ namespace Day21.Test
         {
             var ruleSet = Testing.GetTestFileContents("TestInput.txt").Split(Environment.NewLine);
             var loadedRules = Program.LoadRules(ruleSet);
-            var linearizedInput = Program.Linearize(Program.Input);
-            var image = Program.ExpandArt(linearizedInput, loadedRules, 2);
-            Assert.AreEqual("##.##./#..#../....../##.##./#..#../......", image);
-            Assert.AreEqual(12, image.Count(c => c == '#'));
+            var image = Program.ExpandArt(Program.Input, loadedRules, 2);
+            Assert.AreEqual(12, Program.CountOnPixels(image));
         }
     }
 }

@@ -14,6 +14,9 @@ namespace Day21
     {
         private const string ConciseDelimiter = "/";
 
+        private static readonly Dictionary<char[,], string> LinearizeCache = new Dictionary<char[,], string>();
+        private static readonly Dictionary<string, char[,]> DelinearizeCache = new Dictionary<string, char[,]>();
+
         public static readonly char[,] Input =
         {
             {'.', '#', '.'},
@@ -25,10 +28,23 @@ namespace Day21
         {
             var inputData = File.ReadAllLines("Input.txt");
             var rules = LoadRules(inputData);
-            var inputImage = Linearize(Input);
-            var expandedImage = ExpandArt(inputImage, rules, 5);
+            var expandedImage = ExpandArt(Input, rules, 18);
 
-            Console.WriteLine($"The number of on pixels is: {expandedImage.Count(c => c == '#')}");
+            Console.WriteLine($"The number of on pixels is: {CountOnPixels(expandedImage)}");
+        }
+
+        /// <summary>
+        /// Counts the number of on pixels in a two-dimensional character array
+        /// </summary>
+        public static int CountOnPixels(char[,] image)
+        {
+            var count = 0;
+            for (var j = 0; j < image.GetLength(0); j++)
+            {
+                for (var k = 0; k < image.GetLength(1); k++) if (image[j, k] == '#') count++;
+            }
+
+            return count;
         }
 
         /// <summary>
@@ -36,7 +52,23 @@ namespace Day21
         /// </summary>
         public static Dictionary<string, string> LoadRules(IEnumerable<string> inputRules)
         {
-            return inputRules.Select(rule => rule.Split(" => ")).ToDictionary(s => s[0], s => s[1]);
+            var rules = new Dictionary<string, string>();
+            foreach (var rule in inputRules)
+            {
+                var r = rule.Split(" => ");
+                foreach (var _ in Enumerable.Range(0, 2))
+                {
+                    foreach (var __ in Enumerable.Range(0, 4))
+                    {
+                        rules.TryAdd(r[0], r[1]);
+                        r[0] = Rotate(r[0]);
+                    }
+
+                    r[0] = Flip(r[0]);
+                }
+            }
+
+            return rules;
         }
 
         /// <summary>
@@ -45,6 +77,9 @@ namespace Day21
         /// </summary>
         public static string Linearize(char[,] image)
         {
+            if (LinearizeCache.TryGetValue(image, out var cachedString))
+                return cachedString;
+
             var linearized = "";
 
             foreach (var i in Enumerable.Range(0, image.GetLength(0)))
@@ -62,6 +97,9 @@ namespace Day21
         /// </summary>
         public static char[,] Delinearize(string image)
         {
+            if (DelinearizeCache.TryGetValue(image, out var cachedArray))
+                return cachedArray;
+
             var dividersRemoved = string.Join("", image.Split(ConciseDelimiter));
             var length = (int)Math.Sqrt(dividersRemoved.Length);
 
@@ -71,6 +109,8 @@ namespace Day21
                 foreach (var j in Enumerable.Range(0, length))
                     delineraized[i, j] = dividersRemoved[i*length + j];
             }
+
+            DelinearizeCache[image] = delineraized;
 
             return delineraized;
         }
@@ -111,32 +151,10 @@ namespace Day21
         }
 
         /// <summary>
-        /// Finds a matching pattern by flipping and rotating the provided pattern
-        /// </summary>
-        public static string FindMatchingRule(string linearImage, Dictionary<string, string> rules)
-        {
-            var current = linearImage;
-            foreach (var _ in Enumerable.Range(0, 2))
-            {
-                foreach (var __ in Enumerable.Range(0, 4))
-                {
-                    var successful = rules.TryGetValue(current, out var match);
-                    if (successful) return match;
-
-                    current = Rotate(current);
-                }
-
-                current = Flip(current);
-            }
-
-            throw new InvalidOperationException($"No matching rule found for {linearImage}");
-        }
-
-        /// <summary>
         /// Expands the provided image against the given ruleset for a given
         /// number of iterations
         /// </summary>
-        public static string ExpandArt(string image, Dictionary<string, string> rules, int iterations)
+        public static char[,] ExpandArt(char[,] image, Dictionary<string, string> rules, int iterations)
         {
             foreach (var _ in Enumerable.Range(0, iterations))
             {
@@ -149,38 +167,35 @@ namespace Day21
         /// <summary>
         /// Expands the provided image against the given ruleset
         /// </summary>
-        public static string ExpandArt(string image, Dictionary<string, string> rules)
+        public static char[,] ExpandArt(char[,] image, Dictionary<string, string> rules)
         {
-            var pixels = string.Join("", image.Split(ConciseDelimiter));
             int oldLength, newLength;
 
-            if      (pixels.Length % 2 == 0) (oldLength, newLength) = (2, 3);
-            else if (pixels.Length % 3 == 0) (oldLength, newLength) = (3, 4);
+            if      (image.Length % 2 == 0) (oldLength, newLength) = (2, 3);
+            else if (image.Length % 3 == 0) (oldLength, newLength) = (3, 4);
             else throw new ArgumentException("Received an invalid size image");
 
-            var blockCount = (int) Math.Sqrt(pixels.Length) / oldLength;
+            var blockCount = (int) Math.Sqrt(image.Length) / oldLength;
 
             var expandedLength = blockCount * newLength;
             var expandedArray = new char[expandedLength, expandedLength];
-
-            var delinearized = Delinearize(image);
 
             // Run image replacement rules over existing blocks to create new image
             foreach (var i in Enumerable.Range(0, blockCount))
             {
                 foreach (var j in Enumerable.Range(0, blockCount))
                 {
-                    var subsection = Utilities.GetArraySubsection(delinearized, oldLength, i * oldLength, j * oldLength);
+                    var imageSubsection = Utilities.GetArraySubsection(image, oldLength, i * oldLength, j * oldLength);
 
-                    var linearized = Linearize(subsection);
-                    var replacement = FindMatchingRule(linearized, rules);
+                    var linearized = Linearize(imageSubsection);
+                    var replacement = rules[linearized];
                     var delinearizedReplacement = Delinearize(replacement);
 
                     Utilities.InsertArraySubsection(delinearizedReplacement, expandedArray, i * newLength, j * newLength);
                 }
             }
 
-            return Linearize(expandedArray);
+            return expandedArray;
         }
     }
 }
