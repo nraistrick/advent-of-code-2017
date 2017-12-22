@@ -17,14 +17,62 @@ namespace Day22
     /// </summary>
     public static class Program
     {
-        private const char Clean = '.';
+        private const char Clean    = '.';
+        private const char Flagged  = 'F';
         private const char Infected = '#';
+        private const char Weakened = 'W';
 
         public static void Main()
         {
             var inputData = File.ReadAllLines("Input.txt");
             var infections = CountInfections(10000, inputData);
             Console.WriteLine($"The total number of infections is: {infections}");
+
+            var evolvedInfections = CountEvolvedVirusInfections(10000000, inputData);
+            Console.WriteLine($"The total number of evolved virus infections is: {evolvedInfections}");
+        }
+
+        public static int CountEvolvedVirusInfections(int bursts, IEnumerable<string> mapData)
+        {
+            var infections = 0;
+
+            var (infiniteGrid, (x, y)) = CreateInfiniteGrid(1000, mapData.ToList());
+            var orientation = new Orientation(Direction.Up);
+
+            foreach (var _ in Enumerable.Range(1, bursts))
+            {
+                var currentElement = infiniteGrid[y, x];
+                switch (currentElement)
+                {
+                    case Clean:
+                        infiniteGrid[y, x] = Weakened;
+                        orientation.TurnLeft();
+                        break;
+
+                    case Weakened:
+                        infiniteGrid[y, x] = Infected;
+                        infections++;
+                        break;
+
+                    case Infected:
+                        infiniteGrid[y, x] = Flagged;
+                        orientation.TurnRight();
+                        break;
+
+                    case Flagged:
+                        infiniteGrid[y, x] = Clean;
+                        orientation.TurnRight();
+                        orientation.TurnRight();
+                        break;
+
+                    default:
+                        throw new InvalidOperationException($"Got unexpected element: {currentElement}");
+                }
+
+                (x, y) = GetNextLocation((x, y), orientation.Current);
+            }
+
+            return infections;
         }
 
         /// <summary>

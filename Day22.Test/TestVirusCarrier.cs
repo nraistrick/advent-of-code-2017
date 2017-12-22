@@ -16,5 +16,13 @@ namespace Day22.Test
             Assert.AreEqual(41, Program.CountInfections(70, inputData));
             Assert.AreEqual(5587, Program.CountInfections(10000, inputData));
         }
+
+        [TestMethod]
+        public void TestCountInfectedNodesForEvolvedVirus()
+        {
+            var inputData = Testing.GetTestFileContents("TestInput.txt").Split(Environment.NewLine);
+
+            Assert.AreEqual(26, Program.CountEvolvedVirusInfections(100, inputData));
+        }
     }
 }
