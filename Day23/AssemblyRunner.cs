@@ -54,6 +54,12 @@ namespace Day23
             Registers[register] *= Translate(value);
         }
 
+        private void Modulus(string register, string value)
+        {
+            EnsureRegisterExists(register);
+            Registers[register] %= Translate(value);
+        }
+
         private void Set(string register, string value)
         {
             EnsureRegisterExists(register);
@@ -77,6 +83,9 @@ namespace Day23
                     break;
                 case "mul":
                     Multiply(split[1], split[2]);
+                    break;
+                case "mod":
+                    Modulus(split[1], split[2]);
                     break;
                 case "set":
                     Set(split[1], split[2]);
