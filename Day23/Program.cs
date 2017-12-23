@@ -14,7 +14,7 @@ namespace Day23
                 runner.ExecuteNext();
             }
 
-            Console.WriteLine($"The number of executed multiply instructions is: {runner.MultiplyInstrutionsExecuted}");
+            Console.WriteLine($"The final value in register H is: {runner.Registers["h"]}");
         }
     }
 }

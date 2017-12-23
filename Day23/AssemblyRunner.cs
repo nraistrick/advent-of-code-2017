@@ -9,23 +9,21 @@ namespace Day23
     public class AssemblyRunner
     {
         public int CurrentLine;
-        public int MultiplyInstrutionsExecuted;
 
         private readonly IList<string> _instructions;
-        private readonly Dictionary<string, long> _registers;
+        public readonly Dictionary<string, long> Registers;
 
         public AssemblyRunner(IList<string> instructions)
         {
             _instructions = instructions;
-            _registers = new Dictionary<string, long>
+            Registers = new Dictionary<string, long>
             {
-                {"a", 0}, {"b", 0}, {"c", 0},
+                {"a", 1}, {"b", 0}, {"c", 0},
                 {"d", 0}, {"e", 0}, {"f", 0},
                 {"g", 0}, {"h", 0}
             };
 
             CurrentLine = 0;
-            MultiplyInstrutionsExecuted = 0;
         }
 
         /// <summary>
@@ -35,32 +33,31 @@ namespace Day23
         /// </summary>
         private long Translate(string value)
         {
-            return long.TryParse(value, out var result) ? result : _registers[value];
+            return long.TryParse(value, out var result) ? result : Registers[value];
         }
 
         private void EnsureRegisterExists(string argument)
         {
             if (!int.TryParse(argument, out var unused))
-                _registers.TryAdd(argument, 0);
+                Registers.TryAdd(argument, 0);
         }
 
         private void Subtract(string register, string value)
         {
             EnsureRegisterExists(register);
-            _registers[register] -= Translate(value);
+            Registers[register] -= Translate(value);
         }
 
         private void Multiply(string register, string value)
         {
             EnsureRegisterExists(register);
-            _registers[register] *= Translate(value);
-            MultiplyInstrutionsExecuted++;
+            Registers[register] *= Translate(value);
         }
 
         private void Set(string register, string value)
         {
             EnsureRegisterExists(register);
-            _registers[register] = Translate(value);
+            Registers[register] = Translate(value);
         }
 
         public void ExecuteNext()
