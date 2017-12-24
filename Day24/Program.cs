@@ -18,10 +18,16 @@ namespace Day24
         private static void Main()
         {
             var parts = File.ReadAllLines("Input.txt").ToList();
-            var bridgeOptions = ConstructPossibleBridges(parts);
+            var bridgeOptions = ConstructPossibleBridges(parts).ToList();
             var strongestBridge = FindStrongestBridge(bridgeOptions);
 
             Console.WriteLine($"The strongest bridge is: {strongestBridge}");
+
+            var maxBridgeSize = bridgeOptions.Max(x => x.Count);
+            var bridgesAtMaxSize = bridgeOptions.Where(x => x.Count == maxBridgeSize);
+            var strongestBridgeAtMaxSize = FindStrongestBridge(bridgesAtMaxSize);
+
+            Console.WriteLine($"The strongest bridge with maximum size is: {strongestBridgeAtMaxSize}");
         }
 
         public static int FindStrongestBridge(IEnumerable<List<string>> possibleBridges)
