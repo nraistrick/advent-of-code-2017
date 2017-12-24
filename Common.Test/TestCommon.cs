@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -230,6 +232,19 @@ namespace Common.Test
             };
             newArray = new char[4, 4];
             CollectionAssert.AreEqual(expected, Utilities.InsertArraySubsection(subsection, newArray, 2, 2));
+        }
+
+        [TestMethod]
+        public void TestCloneList()
+        {
+            var firstList = new List<string> {"hi", "there"};
+            var secondList = firstList.Clone();
+
+            firstList.Add("bob");
+
+            CollectionAssert.AreNotEqual(firstList, secondList.ToList());
+            Assert.AreEqual(3, firstList.Count);
+            Assert.AreEqual(2, secondList.Count);
         }
     }
 }
