@@ -4,15 +4,15 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    <PackageReference Include="coveralls.net" Version="0.7.0" />
+    <PackageReference Include="coverlet.msbuild" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Day08\Day08.csproj">
-      <Project>{AD949779-E533-48C9-A0F9-2D2857F1FAF2}</Project>
-      <Name>Day08</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
